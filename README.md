@@ -20,3 +20,9 @@ The resulting log file(s) that are created after a successful run must be **MANU
 In all seriousness, I will probably push a commit with some changes that allow for the files to automatically be moved to their respective directory, but as of right now this bot is in its beta. Making sure you know what's happening in the mean time creates better understanding for what's really going on. When this is *actually* stable this won't be something to take note of and I'll be all for running this bot on a cronjob for months without ever checking on it.
 
 If you have any questions, please feel free to reach out to me. 
+
+## Build v1.2 - 03/18/2022
+Updates:
+- API Keys are now pulled from api.keys, rather than being hard-coded into the application
+- Implemented abuse prevention by only accepting a single comment from each user
+- Implemented a feature which doesn't allow the same user to win two times in a row
