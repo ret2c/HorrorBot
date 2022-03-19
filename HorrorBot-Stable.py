@@ -23,22 +23,30 @@ for key in f:
         profileName = str(key[9:].strip())
 
 # Check if values are empty
+check = 0
+error = ''
 if apifyKey == '':
-    sys.exit('Error: No API Key found for Apify.')
+    error = 'Apify Key\n'
+    check = check + 1
+if deepaiKey == '':
+    error = str(error) + "DeepAI Key\n"
+    check = check + 1
+if metaKey == '':
+    error = str(error) + "Meta Key\n"
+    check = check + 1
+if profileID == '':
+    error = str(error) + "Profile ID\n"
+    check = check + 1
+if profileName == '':
+        error = str(error) + "Profile Name\n"
+        check = check + 1
+
+if check == 5:
+    sys.exit('None of the necessary information needed to run this script was found.\nBe sure to populate api.keys with the requested information.\nIf you don\'t have the file, you can find it here: https://github.com/connorkas/HorrorBot/blob/master/api.keys')
+elif check >= 1:
+    sys.exit('The following values were not present:\n' + str(error) + "This script requires every single value to run.")
 else:
-    if deepaiKey == '':
-        sys.exit('Error: No API Key found for DeepAI.')
-    else:
-        if metaKey == '':
-            sys.exit('Error: No API Key found for Meta (Facebook).')
-        else:
-            if profileID == '':
-                sys.exit('Error: No Profile ID found for Instagram Graph API.')
-            else:
-                if profileName == '':
-                    sys.exit('Error: No Username found for Instagram Lookup.')
-                else:
-                    pass
+    pass
 
 # Prevent last week's user from winning
 try:
