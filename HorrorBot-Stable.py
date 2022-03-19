@@ -78,12 +78,13 @@ headers = {
 request = requests.post('https://api.apify.com/v2/acts/zuzka~instagram-comment-scraper/run-sync-get-dataset-items?token=' + str(apifyKey) + '&format=json&fields=ownerUsername%2Ctext', data=values, headers=headers)
 
 try:
-    x = request.json()
-except:
+    x = request.json()[0]['ownerUsername']
+except KeyError:
     print(request.json())
     logging.debug(request.json())
-    sys.exit('There was an error in grabbing comments. Please review the server\'s response in your log file or terminal output.')
+    sys.exit('There was an error in grabbing comments, did anybody comment? Please review the server\'s response in your log file or terminal output.')
 
+x = request.json()
 print('Comments found, writing to file.')
 
 i = 0
