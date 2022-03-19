@@ -1,0 +1,13 @@
+# Please store all of your API Keys in this file.
+# Note: This is highly sensitive information.
+# Do not share this with anybody untrusted and be sure
+# to operate with a security mindset.
+
+# Please enter your key with no whitespaces directly after the colon.
+# Example:
+# -Key:abcdefg-12340987
+Apify-Key:
+DeepAI-Key:
+Meta-Key:
+Profile-ID:
+Username:
