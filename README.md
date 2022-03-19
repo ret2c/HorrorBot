@@ -13,4 +13,10 @@ Here are the resources that you'll need to get the APIs from:<br>
 | [DeepAI](https://deepai.org)           |
 | [Instagram Graph API](https://developers.facebook.com/docs/instagram-api/getting-started) |
 
+## Please Read:
+The resulting log file(s) that are created after a successful run must be **MANUALLY** moved over to logs/.<br>
+**Q**: Why is this?<br>
+**A**: You should be keeping up to date with how this bot runs. I suggest you review your log files after each run just to make sure you fully understand what's happening behind the scenes.<br>
+In all seriousness, I will probably push a commit with some changes that allow for the files to automatically be moved to their respective directory, but as of right now this bot is in its beta. Making sure you know what's happening in the mean time creates better understanding for what's really going on. When this is *actually* stable this won't be something to take note of and I'll be all for running this bot on a cronjob for months without ever checking on it.
+
 If you have any questions, please feel free to reach out to me. 
