@@ -223,6 +223,6 @@ except KeyError:
     logging.debug(request.json())
     sys.exit('\nThere was a problem posting your image.\nPlease review server response.')
 
-print('Your post is now available at @connorkas')
-logging.info('Posted to @connorkas. Confirmation ID is: ' + str(confirmation))
+print('Your post is now available at @' + str(profileName))
+logging.info('Posted to @' + str(profileName) + '. Confirmation ID is: ' + str(confirmation))
 logging.info('END OF LOG - ' + str(time))
