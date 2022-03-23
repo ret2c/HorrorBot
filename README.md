@@ -13,6 +13,10 @@ Here are the resources that you'll need to get the APIs from:<br>
 | [DeepAI](https://deepai.org)           |
 | [Instagram Graph API](https://developers.facebook.com/docs/instagram-api/getting-started) |
 
+## Dual Branch
+This repository contains a _dual_ branch. If you're running this on a cronjob I recommend you use the dual branch and set the **InstagramGrab.py** to run roughly 5-10 minutes beforehand, since the **HorrorBot.py** file will only take 10-20 seconds to complete.<br>
+This branch is still in testing, and if all goes well and I refine it enough I may merge it into the origin/master branch, but that's for a later date.
+
 ## Please Read:
 The resulting log file(s) that are created after a successful run must be **MANUALLY** moved over to logs/.<br>
 **Q**: Why is this?<br>
