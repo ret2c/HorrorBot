@@ -5,6 +5,7 @@ from datetime import datetime
 time = datetime.today().strftime('%Y-%m-%d')
 logname = str(time) + "-HB.log"
 logging.basicConfig(filename=str(logname),level=logging.DEBUG)
+logging.info('BEGIN LOG - ' + str(time))
 
 # Pull relevant information from api.keys
 f = open('api.keys', 'r')
