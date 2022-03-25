@@ -22,7 +22,8 @@ In all seriousness, I will probably push a commit with some changes that allow f
 If you have any questions, please feel free to reach out to me. 
 
 ## Dual Branch
-This repository contains a _dual_ branch. If you're running this on a cronjob I recommend you use the dual branch and set the **InstagramGrab.py** to run roughly 5-10 minutes beforehand, since the **HorrorBot.py** file will only take 10-20 seconds to complete.<br>
+[Dual Branch Here](https://github.com/connorkas/HorrorBot/tree/dual)<br>
+This repository contains a branch called _dual_. If you're running this on a cronjob I recommend you use the dual branch and set the **InstagramGrab.py** to run roughly 5-10 minutes beforehand, since the **HorrorBot.py** file will only take 10-20 seconds to complete.<br>
 This branch is still in testing, and if all goes well and I refine it enough I may merge it into the origin/master branch, but that's for a later date.
 
 ## Build v1.2 - 03/18/2022
