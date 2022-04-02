@@ -8,7 +8,11 @@ logging.basicConfig(filename=str(logname),level=logging.DEBUG)
 logging.info('BEGIN LOG - ' + str(time))
 
 # Pull relevant information from api.keys
-f = open('api.keys', 'r')
+try:
+    f = open('api.keys', 'r')
+except FileNotFoundError:
+    logging.info('Script Terminated - api.keys not found')
+    sys.exit('api.keys was not found. Be sure it is in the same directory as this script.')
 for key in f:
     if '#' in key:
         pass
