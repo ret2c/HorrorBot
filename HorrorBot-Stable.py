@@ -13,6 +13,7 @@ try:
 except FileNotFoundError:
     logging.info('Script Terminated - api.keys not found')
     sys.exit('api.keys was not found. Be sure it is in the same directory as this script.')
+
 for key in f:
     if '#' in key:
         pass
@@ -47,7 +48,7 @@ if profileName == '':
         check = check + 1
 
 if check == 5:
-    sys.exit('None of the necessary information needed to run this script was found.\nBe sure to populate api.keys with the requested information.\nIf you don\'t have the file, you can find it here: https://github.com/connorkas/HorrorBot/blob/master/api.keys')
+    sys.exit('None of the necessary information needed to run this script was found.\nBe sure to populate api.keys with the requested information.')
 elif check >= 1:
     sys.exit('The following values were not present:\n' + str(error) + "This script requires every single value to run.")
 else:
@@ -106,7 +107,7 @@ f0 = open("user.dream", 'w')
 comments = []
 usernames = [] # Prevent abuse
 
-while i != 24: # API only allows up to 24 comments 
+while i != 24: # Apify API only allows up to 24 comments 
     try:
         text = request.json()[int(i)]['text']
         text = text.lower()
@@ -124,13 +125,15 @@ while i != 24: # API only allows up to 24 comments
             pass
         i = i + 1
     except IndexError:
-        logging.info('While() loop broke at the _' + str(i) + '_ iteration.')
+        logging.info('While() loop broke at iteration #' + str(i) + '.')
         break
 
-### Choose Final Word to Generate With ###
+### Log Comments ###
 print("\nThe possible options were: ")
 print(comments)
 logging.info(comments)
+
+### Choose Winner ###
 finalChoice = random.choice(comments)
 keyword = ':imagine:'
 username, keyword, text = str(finalChoice).partition(keyword)
@@ -144,14 +147,11 @@ f0.write(username)
 logging.info('Chosen comment and author written to *.dream files.')
 print('Chosen comment has been written to: word.dream\nThe dreamer\'s handle has been written to: user.dream\n')
 
-### Grab Chosen Word ###
-filename = "word.dream"
-
 ### Text2Img API ###
 t2iRes = requests.post(
     "https://api.deepai.org/api/text2img",
     data={
-        'text': open(filename, 'rb'),
+        'text': str(finalChoice)
     },
     headers={'api-key': str(deepaiKey)}
 )
@@ -165,6 +165,7 @@ except KeyError:
     print('Error generation output URL. Please review terminal output or log file.')
 
 print('Success! Your image has been generated. Loading Deep Dream...')
+logging.info('Original Image URL: ' + str(x))
 
 ### Deep Dream API ###
 i = 0
@@ -196,7 +197,6 @@ f.write(outputURL)
 logging.info('Wrote to filename: outputURL')
 
 ### Grab Relevent Information ###
-# Grab Input 
 input = open('word.dream', 'r')
 for line in input:
     input = str(line)
@@ -213,7 +213,7 @@ try:
 except KeyError:
     print(request.json())
     logging.debug(request.json())
-    sys.exit('\nYour POST request was invalid\nPlease review server response in logs or terminal output.')
+    sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
 
 print('Creation ID generation was successful.')
 logging.info('Creation ID: ' + str(creationID))
