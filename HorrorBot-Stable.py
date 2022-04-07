@@ -151,7 +151,7 @@ print('Chosen comment has been written to: word.dream\nThe dreamer\'s handle has
 t2iRes = requests.post(
     "https://api.deepai.org/api/text2img",
     data={
-        'text': str(finalChoice)
+        'text': str(finalChoice),
     },
     headers={'api-key': str(deepaiKey)}
 )
