@@ -1,5 +1,6 @@
 import requests, json, sys, random, urllib.parse, logging
 from datetime import datetime
+from serpapi import GoogleSearch
 
 # Start Log
 time = datetime.today().strftime('%Y-%m-%d')
@@ -19,6 +20,8 @@ for key in f:
         pass
     elif 'Apify-Key' in key:
         apifyKey = str(key[10:].strip())
+    elif 'SerpApi-Key' in key:
+        serpapiKey = str(key[12:].strip())
     elif 'DeepAI-Key' in key:
         deepaiKey = str(key[11:].strip())
     elif 'Meta-Key' in key:
@@ -147,25 +150,29 @@ f0.write(username)
 logging.info('Chosen comment and author written to *.dream files.')
 print('Chosen comment has been written to: word.dream\nThe dreamer\'s handle has been written to: user.dream\n')
 
-### Text2Img API ###
-t2iRes = requests.post(
-    "https://api.deepai.org/api/text2img",
-    data={
-        'text': str(finalChoice),
-    },
-    headers={'api-key': str(deepaiKey)}
-)
+### Google Grab ###
+print('Grabbing image from Google...')
+logging.info('Attempting to grab image from Google.')
 
-### Original Image URL ###
+params = {
+  "q": str(finalChoice),
+  "tbm": "isch",
+  "ijn": "0",
+  "api_key": str(serpapiKey)
+}
+
+search = GoogleSearch(params)
+results = search.get_dict()
+imagesResults = results['images_results']
+
+finalImage = next(iter(imagesResults))
+
 try:
-    x = t2iRes.json()['output_url']
+    x = finalImage['original']
 except KeyError:
-    print(t2iRes.json())
-    logging.debug(t2iRes.json())
-    print('Error generation output URL. Please review terminal output or log file.')
-
-print('Success! Your image has been generated. Loading Deep Dream...')
-logging.info('Original Image URL: ' + str(x))
+    logging.debug('There was an error grabbing the image from Google.')
+    sys.exit('There was an error grabbing the image.\nExiting...')
+print('Grabbed image from Google! Generating Deep Dream...\n')
 
 ### Deep Dream API ###
 i = 0
