@@ -55,18 +55,25 @@ if check == 5:
 elif check >= 1:
     sys.exit('The following values were not present:\n' + str(error) + "This script requires every single value to run.")
 else:
-    pass
+    f.close()
 
 # Prevent last week's user from winning
+illegal = ''
 try:
     f = open('user.dream', 'r')
     for winner in f:
         illegal = str(winner)
     if illegal == '':
-        print('No username found, but we detected user.dream\nIs this your first time running this bot?')
+        print('Writing \'sampleUser\' to user.dream since no information was present.')
+        f = open('user.dream', 'w')
+        f.write('sampleUser')
+        f.close()
+        illegal = 'sampleUser'
 except FileNotFoundError:
-    logging.debug('Script aborted because user.dream was not present in the same directory.')
-    sys.exit('user.dream not found (is it in the same directory?)\nLast weeks\'s user is required to prevent them from winning a second time.')
+    f = open('user.dream', 'w')
+    f.write('sampleUser')
+    f.close()
+    illegal = 'sampleUser'
 
 
 ### Grab Recent Instagram Post ###
@@ -96,14 +103,15 @@ request = requests.post('https://api.apify.com/v2/acts/zuzka~instagram-comment-s
 
 try:
     x = request.json()[0]['ownerUsername']
+    logging.info('Comments grabbed.')
 except KeyError:
     print(request.json())
     logging.debug(request.json())
     sys.exit('There was an error in grabbing comments, did anybody comment? Please review the server\'s response in your log file or terminal output.')
 
-x = request.json()
-print('Comments found, writing to file.')
+print('Comments pulled via Apify, choosing winner...')
 
+### Parse Comments ###
 i = 0
 f = open("word.dream", 'w')
 f0 = open("user.dream", 'w')
@@ -119,7 +127,7 @@ while i != 24: # Apify API only allows up to 24 comments
             if uname in usernames:
                 pass
             else:
-                if str(illegal) in str(uname):
+                if str(illegal).lower() == str(uname):
                     pass
                 else:
                     comments.append(uname + ":" + text)
@@ -128,15 +136,20 @@ while i != 24: # Apify API only allows up to 24 comments
             pass
         i = i + 1
     except IndexError:
-        logging.info('While() loop broke at iteration #' + str(i) + '.')
+        logging.info('While() loop broke at the _' + str(i) + '_ iteration.')
         break
 
 ### Log Comments ###
-print("\nThe possible options were: ")
-print(comments)
-logging.info(comments)
+if len(comments) == 0:
+    logging.debug('Script aborted because no \'Imagine\' comments were found.\nIf this was an error with the script\'s function. Please contact @connorkas on GitHub.')
+    sys.exit('No \'Imagine\'comments were found.\nQuitting...')
+else:
+    print("\nThe possible options were: ")
+    print(comments)
+    logging.info('Comments grabbed:')
+    logging.info(comments)
 
-### Choose Winner ###
+### Choose Final Word to Generate With ###
 finalChoice = random.choice(comments)
 keyword = ':imagine:'
 username, keyword, text = str(finalChoice).partition(keyword)
@@ -146,7 +159,9 @@ logging.info('The chosen comment was: ' + str(finalChoice) + '\nSubmitted by: ' 
 
 ### Write To File ###
 f.write(finalChoice)
+f.close()
 f0.write(username)
+f0.close()
 logging.info('Chosen comment and author written to *.dream files.')
 print('Chosen comment has been written to: word.dream\nThe dreamer\'s handle has been written to: user.dream\n')
 
@@ -163,12 +178,13 @@ params = {
 
 search = GoogleSearch(params)
 results = search.get_dict()
-imagesResults = results['images_results']
+images_results = results['images_results']
 
-finalImage = next(iter(imagesResults))
+first_link = next(iter(images_results))
 
 try:
-    x = finalImage['original']
+    x = first_link['original']
+    logging.info('Original Google image URL: ' + str(x))
 except KeyError:
     logging.debug('There was an error grabbing the image from Google.')
     sys.exit('There was an error grabbing the image.\nExiting...')
@@ -206,9 +222,10 @@ logging.info('Wrote to filename: outputURL')
 ### Grab Relevent Information ###
 input = open('word.dream', 'r')
 for line in input:
-    input = str(line)
+    dream = str(line)
+input.close()
 
-caption = 'This week\'s AI image represents: ' + str(input) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday'
+caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday'
 
 # URL Encode Caption
 caption = urllib.parse.quote(caption, safe='')
