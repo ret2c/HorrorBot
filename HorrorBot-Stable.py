@@ -136,7 +136,7 @@ while i != 24: # Apify API only allows up to 24 comments
             pass
         i = i + 1
     except IndexError:
-        logging.info('While() loop broke at the _' + str(i) + '_ iteration.')
+        logging.info('While() loop broke at iteration #' + str(i) + '.')
         break
 
 ### Log Comments ###
