@@ -14,6 +14,8 @@ Here are the resources that you'll need to get the APIs from:<br>
 | [DeepAI](https://deepai.org)           |
 | [Instagram Graph API](https://developers.facebook.com/docs/instagram-api/getting-started) |
 
+*Be sure to run `pip install -r requirements.txt` before anything else
+
 ## Please Read:
 The resulting log file(s) that are created after a successful run must be **MANUALLY** moved over to logs/.<br><br>
 **Q**: Why is this?<br>
