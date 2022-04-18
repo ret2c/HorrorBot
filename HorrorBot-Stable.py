@@ -13,7 +13,7 @@ try:
     f = open('api.keys', 'r')
 except FileNotFoundError:
     logging.info('Script Terminated - api.keys not found')
-    sys.exit('api.keys was not found. Be sure it is in the same directory as this script.')
+    sys.exit('The \'api.keys\' file was not found. Make sure it is in the same directory as this script.')
 
 for key in f:
     if '#' in key:
@@ -53,28 +53,27 @@ if profileName == '':
 if check == 5:
     sys.exit('None of the necessary information needed to run this script was found.\nBe sure to populate api.keys with the requested information.')
 elif check >= 1:
-    sys.exit('The following values were not present:\n' + str(error) + "This script requires every single value to run.")
+    sys.exit('The following values were not present:\n' + str(error) + "This script requires every single key/value to run.")
 else:
     f.close()
 
+def sampleUser():
+    global illegal
+    f = open('user.dream', 'w')
+    f.write('sampleUser')
+    f.close()
+    illegal = 'sampleUser'
+
 # Prevent last week's user from winning
-illegal = ''
 try:
     f = open('user.dream', 'r')
     for winner in f:
         illegal = str(winner)
     if illegal == '':
         print('Writing \'sampleUser\' to user.dream since no information was present.')
-        f = open('user.dream', 'w')
-        f.write('sampleUser')
-        f.close()
-        illegal = 'sampleUser'
+        sampleUser()
 except FileNotFoundError:
-    f = open('user.dream', 'w')
-    f.write('sampleUser')
-    f.close()
-    illegal = 'sampleUser'
-
+    sampleUser()
 
 ### Grab Recent Instagram Post ###
 print('Searching for most recent post...')
@@ -121,10 +120,9 @@ usernames = [] # Prevent abuse
 while i != 24: # Apify API only allows up to 24 comments 
     try:
         text = request.json()[int(i)]['text']
-        text = text.lower()
-        if "imagine:" in text:
+        if "imagine:" == text[0:8].lower():
             uname = request.json()[int(i)]['ownerUsername']
-            if uname in usernames:
+            if uname in usernames or text == '':
                 pass
             else:
                 if str(illegal).lower() == str(uname):
@@ -179,15 +177,18 @@ params = {
 search = GoogleSearch(params)
 results = search.get_dict()
 images_results = results['images_results']
-
 first_link = next(iter(images_results))
 
+### Grab First Image / Error Handling ###
 try:
     x = first_link['original']
     logging.info('Original Google image URL: ' + str(x))
 except KeyError:
     logging.debug('There was an error grabbing the image from Google.')
-    sys.exit('There was an error grabbing the image.\nExiting...')
+    logging.debug(results)
+    print(results)
+    sys.exit('There was an error grabbing the image.\nPlease review the server\'s response in your log file or terminal output.')
+
 print('Grabbed image from Google! Generating Deep Dream...\n')
 
 ### Deep Dream API ###
@@ -204,7 +205,7 @@ while (i != 5):
     x = ddRes.json()['output_url']
     i = i + 1
 
-### Final Output ###
+### Final Output / Error Handling ###
 try:
     outputURL = ddRes.json()['output_url']
 except KeyError:
