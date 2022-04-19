@@ -122,7 +122,7 @@ while i != 24: # Apify API only allows up to 24 comments
         text = request.json()[int(i)]['text']
         if "imagine:" == text[0:8].lower():
             uname = request.json()[int(i)]['ownerUsername']
-            if uname in usernames or text == '':
+            if uname in usernames or text.strip() == '':
                 pass
             else:
                 if str(illegal).lower() == str(uname):
@@ -169,7 +169,7 @@ logging.info('Attempting to grab image from Google.')
 
 params = {
   "q": str(finalChoice),
-  "tbm": "isch",
+  "tbm": "isch", #Img Search
   "ijn": "0",
   "api_key": str(serpapiKey)
 }
@@ -211,13 +211,14 @@ try:
 except KeyError:
     print(ddRes.json())
     logging.debug(ddRes.json())
-    print('There was an error in generating the final output. Please review logs or terminal output.')
+    sys.exit('There was an error in generating the final output. Please review logs or terminal output.')
 
 print('\nYour deep dream image can be found here: ' + outputURL + '\n')
 logging.info('Deep Dream URL: ' + outputURL)
 
 f = open('outputURL', 'w')
 f.write(outputURL)
+f.close()
 logging.info('Wrote to filename: outputURL')
 
 ### Grab Relevent Information ###
