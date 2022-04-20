@@ -112,8 +112,6 @@ print('Comments pulled via Apify, choosing winner...')
 
 ### Parse Comments ###
 i = 0
-f = open("word.dream", 'w')
-f0 = open("user.dream", 'w')
 comments = []
 usernames = [] # Prevent abuse
 
@@ -150,14 +148,16 @@ else:
 ### Choose Final Word to Generate With ###
 finalChoice = random.choice(comments)
 keyword = ':imagine:'
-username, keyword, text = str(finalChoice).partition(keyword)
+username, keyword, text = str(finalChoice).lower().partition(keyword)
 finalChoice = text.strip()
 print("\nThe chosen comment was: " + str(finalChoice) + "\nWhich was written by: " + username + '\n')
 logging.info('The chosen comment was: ' + str(finalChoice) + '\nSubmitted by: ' + username)
 
 ### Write To File ###
+f = open("word.dream", 'w')
 f.write(finalChoice)
 f.close()
+f0 = open("user.dream", 'w')
 f0.write(username)
 f0.close()
 logging.info('Chosen comment and author written to *.dream files.')
@@ -237,9 +237,13 @@ request = requests.post('https://graph.facebook.com/v13.0/' + str(profileID) + '
 try: 
     creationID = request.json()['id']
 except KeyError:
-    print(request.json())
-    logging.debug(request.json())
-    sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
+    if request.json['error']['error_user_title'] == 'Invalid Aspect Ratio':
+        logging.debug('Image failed to upload due to an invalid aspect ratio.\nPlease try again.')
+        sys.exit('Image failed to upload due to an invalid aspect ratio.\nPlease try again.')
+    else:
+        print(request.json())
+        logging.debug(request.json())
+        sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
 
 print('Creation ID generation was successful.')
 logging.info('Creation ID: ' + str(creationID))
