@@ -6,9 +6,10 @@ from serpapi import GoogleSearch
 time = datetime.today().strftime('%Y-%m-%d')
 logname = str(time) + "-HB.log"
 logging.basicConfig(filename=str(logname),level=logging.DEBUG)
-logging.info('BEGIN LOG - ' + str(time))
 
 # Pull relevant information from api.keys
+print('Checking for API Keys & necessary information...')
+logging.info('Checking for prerequisites...')
 try:
     f = open('api.keys', 'r')
 except FileNotFoundError:
@@ -74,6 +75,8 @@ try:
         sampleUser()
 except FileNotFoundError:
     sampleUser()
+
+logging.info('BEGIN HORRORBOT LOG FOR @' + str(profileName) + '\nDATE: ' + str(time))
 
 ### Grab Recent Instagram Post ###
 print('Searching for most recent post...')
