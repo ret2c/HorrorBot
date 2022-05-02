@@ -230,7 +230,7 @@ for line in input:
     dream = str(line)
 input.close()
 
-caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(time)
+caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(datetime.today().strftime('%m/%d/%Y'))
 
 # URL Encode Caption
 caption = urllib.parse.quote(caption, safe='')
