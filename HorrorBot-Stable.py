@@ -33,8 +33,7 @@ for key in f:
         profileName = str(key[9:].strip())
 
 # Check if values are empty
-check = 0
-error = ''
+check, error = 0, ''
 if apifyKey == '':
     error = 'Apify Key\n'
     check = check + 1
@@ -114,11 +113,8 @@ except KeyError:
 print('Comments pulled via Apify, choosing winner...')
 
 ### Parse Comments ###
-i = 0
-comments = []
-usernames = [] # Prevent abuse
-
-while i != 24: # Apify API only allows up to 24 comments 
+i, comments, usernames = 0, [], []
+while i != 24: 
     try:
         text = request.json()[int(i)]['text']
         if "imagine:" == text[0:8].lower():
@@ -145,6 +141,8 @@ if len(comments) == 0:
 else:
     print("\nThe possible options were: ")
     print(comments)
+    print('Comments valid for choosing: ' + str(len(comments)))
+    logging.info('Chance of winning: ' + str(len(comments)))
     logging.info('Comments grabbed:')
     logging.info(comments)
 
