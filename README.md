@@ -16,11 +16,12 @@ Here are the resources that you'll need to get the APIs from:<br>
 
 *Be sure to run `pip install -r requirements.txt` before anything else
 
-## Please Read:
-The resulting log file(s) that are created after a successful run must be **MANUALLY** moved over to logs/.<br><br>
-**Q**: Why is this?<br>
-**A**: You should be keeping up to date with how this bot runs. I suggest you review your log files after each run just to make sure you fully understand what's happening behind the scenes.
-In all seriousness, I will probably push a commit with some changes that allow for the files to automatically be moved to their respective directory, but as of right now this bot is in its beta. Making sure you know what's happening in the mean time creates better understanding for what's really going on. When this is *actually* stable this won't be something to take note of and I'll be all for running this bot on a cronjob for months without ever checking on it.
+## To-Do:
+### Implement saveBot() Function
+If you take a look at the image/caption generation in the script, you’ll notice error checking for Aspect Ratios. Meta doesn’t allow certain aspect ratios to be posted directly, resulting in the script erroring out. I want to implement a saveBot() function where it automatically resizes the aspect ratio to 1:1 so the bot will be able to post the image regardless.
 
-If you have any questions, please feel free to reach out to me.<br>
-**04/13/2022**: I'm working on resolving this to make things easier. I'll push a commit when I have time. Thank you!
+### Fix Comment Limit
+Apify's Instagram API can only pull the safe amount of 24 comments while not being authenticated. As of right now, I’m not worried about the 24 comment limit being hit, but the main problem is that regardless of whether or not someone types the keyword, that still counts as 1 of the 24 comments. The comment checking is only done AFTER all of them have been pulled. This isn't something I'm looking to fix right away. As of right now I don't want to risk having any of my API rights stripped away or blocked. So unless this is NEEDED, this won't be changed.
+
+### Improve Logging
+As of now, logs that are generated each run have to be manually moved to their respective folder. I kept it in this state during its ‘beta’ to make sure things have been going well, but now that I’ve fixed most issues and it seems to be stable, this is very high on my list.
