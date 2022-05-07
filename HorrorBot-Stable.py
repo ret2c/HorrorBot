@@ -122,7 +122,7 @@ while i != 24:
             if uname in usernames or text.strip() == '':
                 pass
             else:
-                if str(illegal).lower() == str(uname):
+                if illegal.lower() == uname:
                     pass
                 else:
                     comments.append(uname + ":" + text)
@@ -209,6 +209,7 @@ while (i != 5):
 ### Final Output / Error Handling ###
 try:
     outputURL = ddRes.json()['output_url']
+    logging.info(ddRes.json())
 except KeyError:
     print(ddRes.json())
     logging.debug(ddRes.json())
@@ -237,6 +238,7 @@ caption = urllib.parse.quote(caption, safe='')
 request = requests.post('https://graph.facebook.com/v13.0/' + str(profileID) + '/media?image_url=' + str(outputURL) + '&caption=' + str(caption) + '&access_token=' + str(metaKey))
 try: 
     creationID = request.json()['id']
+    logging.info(request.json())
 except KeyError:
     if request.json['error']['error_user_title'] == 'Invalid Aspect Ratio':
         logging.debug('Image failed to upload due to an invalid aspect ratio.\nPlease try again.')
@@ -246,7 +248,7 @@ except KeyError:
         logging.debug(request.json())
         sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
 
-print('Creation ID generation was successful.')
+print('Creation ID generation was successful.\nPosting to Instagram...')
 logging.info('Creation ID: ' + str(creationID))
 
 ### Use Creation ID to POST to Instagram ###
@@ -254,6 +256,7 @@ request = requests.post('https://graph.facebook.com/v13.0/' + str(profileID) + '
 
 try:
     confirmation = request.json()['id']
+    logging.info(request.json())
 except KeyError:
     print(request.json())
     logging.debug(request.json())
