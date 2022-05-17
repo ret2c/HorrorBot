@@ -17,7 +17,7 @@ except FileNotFoundError:
     sys.exit('The \'api.keys\' file was not found. Make sure it is in the same directory as this script.')
 
 for key in f:
-    if '#' in key:
+    if key.startswith('#'):
         pass
     elif 'Apify-Key' in key:
         apifyKey = str(key[10:].strip())
@@ -229,7 +229,11 @@ for line in input:
     dream = str(line)
 input.close()
 
-caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(datetime.today().strftime('%m/%d/%Y'))
+today = datetime.date.today()
+nextWeek = today + datetime.timedelta(days=7)
+nextWeek = nextWeek.strftime("%m/%d/%Y")
+
+caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(nextWeek)
 
 # URL Encode Caption
 caption = urllib.parse.quote(caption, safe='')
