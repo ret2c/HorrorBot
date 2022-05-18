@@ -229,11 +229,7 @@ for line in input:
     dream = str(line)
 input.close()
 
-today = datetime.date.today()
-nextWeek = today + datetime.timedelta(days=7)
-nextWeek = nextWeek.strftime("%m/%d/%Y")
-
-caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(nextWeek)
+caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(datetime.today().strftime('%m/%d/%Y'))
 
 # URL Encode Caption
 caption = urllib.parse.quote(caption, safe='')
@@ -244,13 +240,9 @@ try:
     creationID = request.json()['id']
     logging.info(request.json())
 except KeyError:
-    if request.json['error']['error_user_title'] == 'Invalid Aspect Ratio':
-        logging.debug('Image failed to upload due to an invalid aspect ratio.\nPlease try again.')
-        sys.exit('Image failed to upload due to an invalid aspect ratio.\nPlease try again.')
-    else:
-        print(request.json())
-        logging.debug(request.json())
-        sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
+    print(request.json())
+    logging.debug(request.json())
+    sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
 
 print('Creation ID generation was successful.\nPosting to Instagram...')
 logging.info('Creation ID: ' + str(creationID))
