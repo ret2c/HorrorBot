@@ -124,6 +124,8 @@ while i != 24:
     else:
         choices.append(text)
         i += 1
+    finally:
+        logging.info(choices)
 
 ### Parse Comments ###
 for i in range(len(choices)):
