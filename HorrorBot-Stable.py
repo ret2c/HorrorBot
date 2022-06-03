@@ -112,30 +112,35 @@ except KeyError:
 
 print('Comments pulled via Apify, choosing winner...')
 
-### Parse Comments ###
-i, comments, usernames = 0, [], []
-while i != 24: 
+### Load Comments Into List ###
+i, comments, usernames, choices = 0, [], [], []
+while i != 24:
     try:
         text = request.json()[int(i)]['text']
-        if "imagine:" == text[0:8].lower():
+    except IndexError:
+        print('Parsed %s comments.', str(i))
+        logging.info('While() loop broke at iteration #%s.' % str(i))
+        break
+    else:
+        choices.append(text)
+        i += 1
+
+### Parse Comments ###
+for i in range(len(choices)):
+    if "imagine:" == text[0:8].lower():
             uname = request.json()[int(i)]['ownerUsername']
             if uname in usernames or text.strip() == '':
                 pass
+            if illegal.lower() == uname:
+                pass
             else:
-                if illegal.lower() == uname:
-                    pass
-                else:
-                    comments.append(uname + ":" + text)
-                    usernames.append(uname)
-        else:
-            pass
-        i = i + 1
-    except IndexError:
-        logging.info('While() loop broke at iteration #' + str(i) + '.')
-        break
+                comments.append(uname + ":" + text)
+                usernames.append(uname)
+    else:
+        pass
 
 ### Log Comments ###
-if len(comments) == 0:
+if comments:
     logging.debug('Script aborted because no \'Imagine\' comments were found.\nIf this was an error with the script\'s function. Please contact @connorkas on GitHub.')
     sys.exit('No \'Imagine\'comments were found.\nQuitting...')
 else:
@@ -151,8 +156,8 @@ finalChoice = random.choice(comments)
 keyword = ':imagine:'
 username, keyword, text = str(finalChoice).lower().partition(keyword)
 finalChoice = text.strip()
-print("\nThe chosen comment was: " + str(finalChoice) + "\nWhich was written by: " + username + '\n')
-logging.info('The chosen comment was: ' + str(finalChoice) + '\nSubmitted by: ' + username)
+print("\nThe chosen comment was: %s\nWhich was written by: %s\n" % (str(finalChoice)), str(username))
+logging.info('The chosen comment was: %s\nSubmitted by: %s' % (str(finalChoice), str(username)))
 
 ### Write To File ###
 f = open("word.dream", 'w')
@@ -235,7 +240,7 @@ caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + 
 caption = urllib.parse.quote(caption, safe='')
 
 ### Request Creation ID From Meta (FB) ###
-request = requests.post('https://graph.facebook.com/v13.0/' + str(profileID) + '/media?image_url=' + str(outputURL) + '&caption=' + str(caption) + '&access_token=' + str(metaKey))
+request = requests.post('https://graph.facebook.com/v13.0/%s/media?image_url=%s&caption=%s&access_token=%s' % (str(profileID), str(outputURL), str(caption), str(metaKey)))
 try: 
     creationID = request.json()['id']
     logging.info(request.json())
@@ -248,8 +253,7 @@ print('Creation ID generation was successful.\nPosting to Instagram...')
 logging.info('Creation ID: ' + str(creationID))
 
 ### Use Creation ID to POST to Instagram ###
-request = requests.post('https://graph.facebook.com/v13.0/' + str(profileID) + '/media_publish?creation_id=' + str(creationID) + '&access_token=' + str(metaKey))
-
+request = requests.post('https://graph.facebook.com/v13.0/%s/media_publish?creation_id=%s&access_token=%s' % (profileID, creationID, metaKey))
 try:
     confirmation = request.json()['id']
     logging.info(request.json())
@@ -257,7 +261,8 @@ except KeyError:
     print(request.json())
     logging.debug(request.json())
     sys.exit('\nThere was a problem posting your image.\nPlease review server response.')
-
-print('Your post is now available at @' + str(profileName))
-logging.info('Posted to @' + str(profileName) + '. Confirmation ID is: ' + str(confirmation))
-logging.info('END OF LOG - ' + str(time))
+else:
+    print('Your post is now available at @' + str(profileName))
+    logging.info('Posted to @' + str(profileName) + '. Confirmation ID is: ' + str(confirmation))
+    logging.info('END OF LOG - ' + str(time))
+sys.exit('Quitting HorrorBot...')
