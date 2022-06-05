@@ -255,6 +255,9 @@ except KeyError:
     print(request.json())
     logging.debug(request.json())
     sys.exit('\nYour POST request was invalid.\nPlease review server response in logs or terminal output.')
+except Exception as e:
+    logging.debug(e)
+    sys.exit('The POST request failed. Is this an aspect ratio issue?\nPlease refer to the error exception: %s' % e)
 
 print('Creation ID generation was successful.\nPosting to Instagram...')
 logging.info('Creation ID: ' + str(creationID))
