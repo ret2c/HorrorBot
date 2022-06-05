@@ -53,7 +53,7 @@ if profileName == '':
 if check == 5:
     sys.exit('None of the necessary information needed to run this script was found.\nBe sure to populate api.keys with the requested information.')
 elif check >= 1:
-    sys.exit('The following values were not present:\n' + str(error) + "This script requires every single key/value to run.")
+    sys.exit('The following values were not present:\n%sThis script requires every single key/value to run.' % error)
 else:
     f.close()
 
@@ -75,7 +75,7 @@ try:
 except FileNotFoundError:
     sampleUser()
 
-logging.info('BEGIN HORRORBOT LOG FOR @' + str(profileName) + '\nDATE: ' + str(time))
+logging.info('BEGIN HORRORBOT LOG FOR @%s\nDATE: %s' % profileName, time)
 
 ### Grab Recent Instagram Post ###
 print('Searching for most recent post...')
@@ -83,7 +83,7 @@ values = "{\"username\": [\"" + str(profileName) + "\"],\"resultsLimit\": 1}"
 headers = {
         'Content-Type': 'application/json'
 }
-request = requests.get('https://api.apify.com/v2/acts/zuzka~instagram-post-scraper/run-sync-get-dataset-items?token=' + str(apifyKey) + '&build=latest&format=json&fields=url', data=values, headers=headers)
+request = requests.get('https://api.apify.com/v2/acts/zuzka~instagram-post-scraper/run-sync-get-dataset-items?token=%s&build=latest&format=json&fields=url' % + str(apifyKey), data=values, headers=headers)
 
 try:
     recentPostUrl = request.json()[0]['url']
@@ -92,15 +92,15 @@ except KeyError:
     logging.debug(request.json())
     sys.exit('There was an error in your request. Please review the server\'s response in your log file or terminal output.')
 
-print('Found most recent post: ' + recentPostUrl + "\nGrabbing comments...")
-logging.info('Found most recent post: ' + recentPostUrl + "\nGrabbing comments...")
+print('Found most recent post: %s\nGrabbing comments...' % recentPostUrl)
+logging.info('Found most recent post: %s\nGrabbing comments...' % recentPostUrl)
 
 ### Grab Comment From Recent Post ###
 values = "{\"directUrls\":[\"" + str(recentPostUrl) + "\"],\"resultsLimit\":24}"
 headers = {
   'Content-Type': 'application/json'
 }
-request = requests.post('https://api.apify.com/v2/acts/zuzka~instagram-comment-scraper/run-sync-get-dataset-items?token=' + str(apifyKey) + '&format=json&fields=ownerUsername%2Ctext', data=values, headers=headers)
+request = requests.post('https://api.apify.com/v2/acts/zuzka~instagram-comment-scraper/run-sync-get-dataset-items?token=%s&format=json&fields=ownerUsername%2Ctext' % apifyKey, data=values, headers=headers)
 
 try:
     x = request.json()[0]['ownerUsername']
@@ -125,7 +125,12 @@ while i != 24:
         choices.append(text)
         i += 1
     finally:
-        logging.info(choices)
+        if choices:
+            logging.info(choices)
+        else:
+            logging.debug("An unexpected error has occured. No comments were grabbed. Did anybody comment?")
+            logging.debug(choices)
+            sys.exit("An unexpected error has occured. No comments were grabbed. Did anybody comment?")
 
 ### Parse Comments ###
 for i in range(len(choices)):
@@ -202,7 +207,7 @@ print('Grabbed image from Google! Generating Deep Dream...\n')
 ### Deep Dream API ###
 i = 0
 while (i != 5):
-    print('Working on iteration #' + str((i + 1)) + '...')
+    print('Working on iteration #%s...' % str((i + 1)))
     ddRes = requests.post(
         "https://api.deepai.org/api/deepdream",
         data={
@@ -236,7 +241,7 @@ for line in input:
     dream = str(line)
 input.close()
 
-caption = 'This week\'s AI image represents: ' + str(dream) + '\nThank you @' + str(username) + ' for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday, ' + str(datetime.today().strftime('%m/%d/%Y'))
+caption = 'This week\'s AI image represents: %s\nThank you @%s for this gift of imagination.\n\nIf you\'d like to imagine a new post next week, post a comment such as:\nImagine: <Insert Your Creation>\n\nThank you all. See you next week.\n4:00PM CST - Tuesday' % str(dream), str(username)
 
 # URL Encode Caption
 caption = urllib.parse.quote(caption, safe='')
