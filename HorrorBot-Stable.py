@@ -136,9 +136,11 @@ while i != 24:
 for i in range(len(choices)):
     if "imagine:" == text[0:8].lower():
             uname = request.json()[int(i)]['ownerUsername']
-            if uname in usernames or text.strip() == '':
+            if uname in usernames:
                 pass
-            if illegal.lower() == uname:
+            elif text.strip() == '':
+                pass
+            elif illegal.lower() == uname:
                 pass
             else:
                 comments.append(uname + ":" + text)
@@ -153,8 +155,8 @@ if comments:
 else:
     print("\nThe possible options were: ")
     print(comments)
-    print('Comments valid for choosing: ' + str(len(comments)))
-    logging.info('Chance of winning: ' + str(len(comments)))
+    print('Comments valid for choosing: %s' % str(len(comments)))
+    logging.info('Chance of winning: 1/%s' % str(len(comments)))
     logging.info('Comments grabbed:')
     logging.info(comments)
 
