@@ -5,6 +5,7 @@ If you'd like to learn more about how this bot works, I highly recommend you che
 
 To give you a brief summary of what this bot does:
 > Once a month, this bot will pull all of the comments from my most recent Instagram post and select any comments starting with the keyword imagine. It will then randomly choose one of the comments and run that comment as an image search query with SerpAPI. After grabbing the output URL, it runs it through the DeepAI Deep Dream API for 5 iterations to give it a more ‘wild look’. Then the resulting image is posted, describing the input the AI was given and crediting the user who originally supplied it.
+
 Note: This script must be set to run on a cronjob
 
 Here are the resources that you'll need to get the APIs from:<br>
