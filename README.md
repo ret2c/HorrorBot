@@ -4,7 +4,8 @@ An Instagram bot that utilizes DeepAI's API.
 If you'd like to learn more about how this bot works, I highly recommend you check out [my blog post](https://ckyy.medium.com/creating-horrorbot-46072dd5de2e) about it, which goes into this a lot deeper.
 
 To give you a brief summary of what this bot does:
-> Once a week, this bot will pull all of the comments from my most recent Instagram post and select any comments starting with the keyword imagine. It will then randomly choose one of the comments and run that comment as an image search query with SerpAPI. After grabbing the output URL, it runs it through the DeepAI Deep Dream API for 5 iterations to give it a more ‘wild look’. Then the resulting image is posted, describing the input the AI was given and crediting the user who originally supplied it.
+> Once a month, this bot will pull all of the comments from my most recent Instagram post and select any comments starting with the keyword imagine. It will then randomly choose one of the comments and run that comment as an image search query with SerpAPI. After grabbing the output URL, it runs it through the DeepAI Deep Dream API for 5 iterations to give it a more ‘wild look’. Then the resulting image is posted, describing the input the AI was given and crediting the user who originally supplied it.
+Note: This script must be set to run on a cronjob
 
 Here are the resources that you'll need to get the APIs from:<br>
 | API Sources   |      
@@ -25,3 +26,6 @@ Apify's Instagram API can only pull the safe amount of 24 comments while not bei
 
 ### Improve Logging
 As of now, logs that are generated each run have to be manually moved to their respective folder. I kept it in this state during its ‘beta’ to make sure things have been going well, but now that I’ve fixed most issues and it seems to be stable, this is very high on my list.
+
+### Improve Error Logging
+While the majority of errors are handled well and give meaningful output, the rare errors (such as invalid aspect ratios from Meta) aren't handled correctly and causes a nondescript error to be pushed out.
