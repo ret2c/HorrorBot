@@ -1,4 +1,7 @@
 # HorrorBot for Instagram 🧟‍♀️
+
+**🚨 HorrorBot was retired in August 2022. Thank you everybody! 🚨**
+
 An Instagram bot that utilizes DeepAI's API.
 
 If you'd like to learn more about how this bot works, I highly recommend you check out [my blog post](https://ckyy.medium.com/creating-horrorbot-46072dd5de2e) about it, which goes into this a lot deeper.
